@@ -1,7 +1,6 @@
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { MacbookAnimation } from './MacbookAnimation';
-import { BGPattern } from './ui/bg-pattern';
 
 export function Hero() {
   const containerRef = useRef<HTMLElement>(null);
@@ -40,16 +39,21 @@ export function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center bg-white overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center bg-gradient-hero bg-pattern overflow-hidden"
     >
-      <BGPattern
-        variant="grid"
-        mask="fade-edges"
-        fill="hsl(var(--primary) / 0.15)"
-        size={40}
-      />
-      {/* Animated Background Orbs with Mouse Parallax */}
+      {/* Interactive Gradient Background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Dynamic Gradient Blob */}
+        <motion.div
+          className="absolute inset-0 opacity-40 mix-blend-soft-light"
+          style={{
+            background: useTransform(
+              [useSpring(mousePosition.x, springConfig), useSpring(mousePosition.y, springConfig)],
+              ([x, y]) => `radial-gradient(circle at ${(x as number * 50) + 50}% ${(y as number * 50) + 50}%, hsl(var(--secondary)) 0%, transparent 50%)`
+            )
+          }}
+        />
+
         <motion.div
           style={{
             y: y3,
