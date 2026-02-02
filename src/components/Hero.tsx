@@ -14,6 +14,14 @@ export function Hero() {
   // Parallax transforms with spring for smoothness
   const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
 
+  const mouseX = useSpring(0, springConfig);
+  const mouseY = useSpring(0, springConfig);
+
+  const gradientBackground = useTransform(
+    [mouseX, mouseY],
+    ([x, y]) => `radial-gradient(800px circle at ${(x as number * 50) + 50}% ${(y as number * 50) + 50}%, hsl(var(--secondary) / 0.15) 0%, transparent 60%)`
+  );
+
   const y1 = useSpring(useTransform(scrollYProgress, [0, 1], [0, 150]), springConfig);
   const y2 = useSpring(useTransform(scrollYProgress, [0, 1], [0, -100]), springConfig);
   const y3 = useSpring(useTransform(scrollYProgress, [0, 1], [0, 200]), springConfig);
@@ -26,15 +34,16 @@ export function Hero() {
     const handleMouseMove = (e: MouseEvent) => {
       const { clientX, clientY } = e;
       const { innerWidth, innerHeight } = window;
-      setMousePosition({
-        x: (clientX - innerWidth / 2) / innerWidth,
-        y: (clientY - innerHeight / 2) / innerHeight,
-      });
+      const x = (clientX - innerWidth / 2) / innerWidth;
+      const y = (clientY - innerHeight / 2) / innerHeight;
+      setMousePosition({ x, y });
+      mouseX.set(x);
+      mouseY.set(y);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [mouseX, mouseY]);
 
   return (
     <section
@@ -45,12 +54,9 @@ export function Hero() {
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Dynamic Gradient Blob */}
         <motion.div
-          className="absolute inset-0 opacity-40 mix-blend-soft-light"
+          className="absolute inset-0 opacity-100 mix-blend-multiply"
           style={{
-            background: useTransform(
-              [useSpring(mousePosition.x, springConfig), useSpring(mousePosition.y, springConfig)],
-              ([x, y]) => `radial-gradient(circle at ${(x as number * 50) + 50}% ${(y as number * 50) + 50}%, hsl(var(--secondary)) 0%, transparent 50%)`
-            )
+            background: gradientBackground
           }}
         />
 
