@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 import { MacbookAnimation } from './MacbookAnimation';
+import { BGPattern } from './ui/bg-pattern';
 
 export function Hero() {
   const containerRef = useRef<HTMLElement>(null);
@@ -39,8 +40,14 @@ export function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center bg-gradient-hero bg-pattern overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center bg-white overflow-hidden"
     >
+      <BGPattern
+        variant="grid"
+        mask="fade-edges"
+        fill="hsl(var(--primary) / 0.15)"
+        size={40}
+      />
       {/* Animated Background Orbs with Mouse Parallax */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
